@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Globe from 'react-globe.gl'
 import Button from './Button'
 
@@ -15,6 +15,29 @@ const About = () => {
     }, 2000);
 
   }
+
+  const markers = [
+    {
+      id: 1,
+      name: "I am here",
+      coordinates: [3.1390, 101.6869], // Kuala Lumpur
+      value: 10, // size of the marker (optional)
+    },
+  ];
+
+  const cities = [
+    { name: "I here in Kuala Lumpur", coordinates: [3.1390, 101.6869], size: 10 },
+  ];
+
+  const globeRef = useRef();
+  useEffect(() => {
+    if (globeRef.current) {
+      globeRef.current.pointOfView(
+        { lat: 3.1390, lng: 101.6869, altitude: 2.5 }, // Adjust altitude for zoom level
+        1000 // Animation duration in milliseconds
+      );
+    }
+  }), [];
 
 
   return (
@@ -43,12 +66,21 @@ const About = () => {
             <div className='col-span-1 xl:row-span-4'>
                 <div className='grid-container'>
                   <div className='rounded-3xl w-full sm:h-[326px] h-fit flex justify-center items-center'>
-                    <Globe width={326} height={326} backgroundColor="rgba(0, 0, 0, 0)" backgroudImageOpacity={0.5} showAtmosphere showGraticules globeImageUrl="//unpkg.com/three-globe/example/img/earth-night.jpg"
+                    <Globe width={380} height={380} backgroundColor="rgba(0, 0, 0, 0)" backgroudImageOpacity={0.5} showAtmosphere showGraticules globeImageUrl="//unpkg.com/three-globe/example/img/earth-night.jpg"
+                     ref={globeRef}
+                     labelsData={cities} // Pass the city data for labels
+                     labelLat={(d) => d.coordinates[0]} // Latitude for labels
+                     labelLng={(d) => d.coordinates[1]} // Longitude for labels
+                     labelText={(d) => d.name} // City name as label text
+                     labelSize={(d) => d.size / 5} // Adjust label size dynamically
+                     labelColor={() => "orange"} // Label color
+                     labelDotRadius={(d) => d.size / 5} // Adjust marker size
+                     labelResolution={2} // Increase label resolution
                     bumpImageUrl="//unpkg.com/three-globe/example/img/earth-topology.png" />
                   </div>
                   <div>
-                    <p className='grid-headtext'>I Work remotely</p>
-                    <p className='grid-subtext'>I based in Kuala Lumpur, Malaysia</p>
+                    <p className='grid-headtext'>My Location</p>
+                    <p className='grid-subtext'>Wangsa Maju, Kuala Lumpur, Malaysia</p>
                     <Button text={"Contact Me"} isBeam={true} containerClass={"mt-10 w-full"}/>
                   </div>
                   
